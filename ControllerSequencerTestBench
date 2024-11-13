@@ -1,0 +1,44 @@
+
+module ControlSequence_tb;
+  reg CLK;
+  reg CLR_n;
+  reg [3:0] Opcode;
+  reg [11:0] CON;
+  reg [5:0] state;
+
+  ControlSequence uut (
+    .CLK(CLK), 
+    .CLR_n(CLR_n),
+    .Opcode(Opcode),
+    .CON(CON),
+    .state(state)
+  );
+
+
+  always begin
+    #5 CLK = ~CLK;
+  end
+
+  initial begin
+
+    CLK = 0;
+    CLR_n = 0;
+    Opcode = 4'b0000;  
+    #10;               
+    CLR_n = 1;
+    
+    #20;
+
+    Opcode = 4'b0001;  
+
+    #50;               
+    $finish;
+  end
+
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0);  
+  end
+
+endmodule
