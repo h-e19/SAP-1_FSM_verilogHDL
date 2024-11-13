@@ -1,0 +1,82 @@
+module ControlSequence (
+  input CLK, 
+  input CLR_n,
+  input [3:0] Opcode,
+  output reg [11:0] CON,
+  output reg [5:0] state
+);
+
+  reg [5:0] next_state;
+  
+  localparam t1 = 6'b000001;
+  localparam t2 = 6'b000010;
+  localparam t3 = 6'b000100;
+  localparam t4 = 6'b001000;
+  localparam t5 = 6'b010000;
+  localparam t6 = 6'b100000;
+
+  localparam LDA = 4'b0000;
+  localparam ADD = 4'b0001;
+  localparam SUB = 4'b0010;
+  localparam OUT = 4'b1110;
+  
+  
+  always @(negedge CLK or negedge CLR_n) begin
+    if (!CLR_n) 
+      state <= t1; 
+    else 
+      state <= next_state; 
+  end
+  
+  always @(*) begin
+    case(state)
+      
+      t1: begin
+        CON = 12'b010111100011;
+        next_state = t2;
+      end
+      
+      t2: begin
+        CON = 12'b101111100011;
+        next_state = t3;
+      end
+      
+      t3: begin
+        CON = 12'b001001100011;
+        next_state = t4;
+      end
+      
+      t4: begin
+        case(Opcode)
+          LDA: CON = 12'b000110100011;
+          ADD: CON = 12'b000110100011;
+          SUB: CON = 12'b000110100011;
+          OUT: CON = 12'b001111110010;
+        endcase
+        next_state = t5;
+      end
+      
+      t5: begin
+        case(Opcode)
+          LDA: CON = 12'b001011000011;
+          ADD: CON = 12'b001011100001;
+          SUB: CON = 12'b001011100001;
+          OUT: CON = 12'b001111100011;
+        endcase
+        next_state = t6;
+      end
+      
+      t6: begin
+        case(Opcode)
+          LDA: CON = 12'b001111100011;
+          ADD: CON = 12'b001111000111;
+          SUB: CON = 12'b001111001111;
+          OUT: CON = 12'b001111100011;
+        endcase
+        next_state = t1;
+      end
+      
+    endcase
+  end
+  
+endmodule
