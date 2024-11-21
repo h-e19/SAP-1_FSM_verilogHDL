@@ -1,0 +1,25 @@
+module IR (
+  input CLK,
+  input CLR_n,
+  input Ei_n,
+  input Li_n,
+  input [7:0] bus,
+  output [3:0] opcode,
+  output [3:0] address
+);
+  
+  reg [7:0] instruction;
+  reg [3:0] opcode;
+  reg [3:0] address;
+  
+  always@ (posedge CLK) begin
+    if(negedge Li_n) begin
+      instruction <= bus;
+    end
+    
+    assign address = instruction [3:0];
+    assign opcode = introduction [7:4];
+    
+//    assign out = Ei_n ? 3'bz : ;
+  
+endmodule
