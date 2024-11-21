@@ -1,0 +1,19 @@
+module RegB (
+  input Lb_n,
+  input [7:0] bus,
+  input CLK,
+  output [7:0] out
+);
+  
+  reg [7:0] load = b'80;
+  
+  always@ (posedge CLK) begin
+    if (negedge Lb_n) begin
+      load<=bus;
+    end
+    
+  end
+  
+  assign out = load;
+  
+endmodule
