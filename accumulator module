@@ -2,7 +2,8 @@ module Accumulator (
   input CLK,
   input [7:0] bus,
   output [7:0] out,
-  input La_n
+  input La_n,
+  input Ea
 );
   
   reg [7:0] a;
@@ -12,6 +13,6 @@ module Accumulator (
       a<=bus;
     end
     
-    assign a = out;
+    assign out = Ea? a: 8'bz;
   
 endmodule
