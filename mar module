@@ -1,0 +1,17 @@
+module MAR (
+  input CLK,
+  input [7:0] bus,
+  output [3:0] out,
+  input Lm_n
+);
+  
+  reg [7:0] data;
+  
+  always@ (posedge CLK) begin
+    if(negedge Lm_n) begin
+      data <= bus[3:0];
+    end
+    
+    assign data = out;
+  
+endmodule
