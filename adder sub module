@@ -1,0 +1,23 @@
+module adder_sub (
+  input [7:0] accumulator,
+  input [7:0] regB,
+  input Su,
+  input Eu,
+  output [7:0] out
+);
+  
+  reg [7:0] result;
+  
+  always @ (*) begin
+    
+    if (Su) begin
+      assign result = accumulator - regB;
+    end else begin
+      assign result = accumulator + regB;
+    end
+    
+  end
+  
+  assign out = Eu? result : 8'bz;
+  
+endmodule
