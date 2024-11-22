@@ -9,17 +9,16 @@ module IR (
 );
   
   reg [7:0] instruction;
-  reg [3:0] opcode;
-  reg [3:0] address;
+  reg [3:0] ad;
   
   always@ (posedge CLK) begin
     if(negedge Li_n) begin
       instruction <= bus;
     end
     
-    assign address = instruction [3:0];
     assign opcode = introduction [7:4];
+    assign ad = instruction [3:0]];
     
-//    assign out = Ei_n ? 3'bz : ;
+    assign address = Ei_n ? 3'bz : ad;
   
 endmodule
