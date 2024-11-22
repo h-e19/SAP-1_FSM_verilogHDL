@@ -1,0 +1,28 @@
+module RAM (
+  input [3:0] address,
+  input CE_n,
+  output [7:0] data;
+)
+  logic [7:0] RAM [15:0];
+  
+  initial begin
+    RAM[0] <= 8'h09;
+    RAM[1] <= 8'h1A;
+    RAM[2] <= 8'h1B;
+    RAM[3] <= 8'h2C;
+    RAM[4] <= 8'h00;
+    RAM[5] <= 8'h00;
+    RAM[6] <= 8'h00;
+    RAM[7] <= 8'h00;
+    RAM[8] <= 8'h00;
+    RAM[9] <= 8'h10;
+    RAM[10] <= 8'h14;
+    RAM[11] <= 8'h18;
+    RAM[12] <= 8'h20;
+    RAM[13] <= 8'h00;
+    RAM[14] <= 8'h00;
+    RAM[15] <= 8'h00;
+  end
+  assign data = CE_n? 8b'z : RAM[address];
+  
+endmodule
