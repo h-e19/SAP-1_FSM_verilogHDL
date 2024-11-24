@@ -1,0 +1,40 @@
+module SAP_1_tb;
+  // Declare inputs and outputs for the testbench
+  reg CLK;            
+  reg CLR_n;
+  
+
+  wire [7:0] data_bus;
+  wire [3:0] address_bus;
+  wire [3:0] ir_opcode;
+  wire [3:0] ir_address;
+  wire [7:0] accumulator_out;
+  wire [7:0] reg_b_out;
+  wire [7:0] alu_result;
+  wire [11:0] control_signals;
+  wire [7:0] outputReg;
+
+  SAP_1 dut (
+    .CLK(CLK),
+    .CLR_n(CLR_n)
+  );
+
+  always begin
+    #5 CLK = ~CLK;
+  end
+
+  initial begin
+
+    CLK = 0;
+    CLR_n = 0;
+    #100;               
+    $finish;
+  end
+
+  
+  initial begin
+    $dumpfile("dump.vcd");
+    $dumpvars(0);  
+  end
+
+endmodule
