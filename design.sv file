@@ -1,0 +1,119 @@
+`include "ControlSequence.sv"
+`include "ProgramCounter.sv"
+`include "Adder_Sub.sv"
+`include "InstructionRegister.sv"
+`include "MAR.sv"
+`include "Accumulator.sv"
+`include "RegB.sv"
+`include "RAM.sv"
+`include "Bus.sv"
+`include "Clock.sv"
+
+module SAP_1(
+  input CLK,   
+  input CLR_n 
+);
+
+
+  wire halt_signal;
+  wire clk_out;    
+  wire [7:0] data_bus;
+  wire [3:0] address_bus;
+  wire [3:0] ir_opcode;
+  wire [3:0] ir_address;
+  wire [7:0] accumulator_out;
+  wire [7:0] reg_b_out;
+  wire [7:0] alu_result;
+  wire [11:0] control_signals;
+  wire [7:0] outputReg;
+
+  Clock clock_controller(
+    .clk_in(CLK),
+    .hlt(halt_signal),
+    .clk_out(clk_out)
+  );
+
+  ControlSequence control_sequence(
+    .CLK(clk_out), 
+    .CLR_n(CLR_n),
+    .Opcode(ir_opcode),
+    .CON(control_signals)
+  );
+  
+  ProgramCounter program_counter(
+    .CLK(clk_out), 
+    .CLR_n(CLR_n),
+    .Cp(control_signals[0]),
+    .Ep(control_signals[1]),
+    .address(address_bus)
+  );
+  
+  RAM ram(
+    .address(address_bus),
+    .CE_n(control_signals[2]),
+    .data(data_bus)
+  );
+  
+  RegB reg_b(
+    .CLK(clk_out),
+    .Lb_n(control_signals[3]),
+    .bus(data_bus),
+    .out(reg_b_out)
+  );
+  
+  RegB outputRegister(
+    .CLK(clk_out),
+    .Lb_n(control_signals[1]),
+    .bus(data_bus),
+    .out(outputReg)
+  )
+  
+  Accumulator accumulator(
+    .CLK(clk_out), 
+    .bus(data_bus),
+    .out(accumulator_out),
+    .La_n(control_signals[4]),
+    .Ea(control_signals[5])
+  );
+  
+  adder_sub adder_subtractor(
+    .accumulator(accumulator_out),
+    .regB(reg_b_out),
+    .Su(control_signals[6]),
+    .Eu(control_signals[7]),
+    .out(alu_result)
+  );
+  
+  IR ir(
+    .CLK(clk_out),
+    .CLR_n(CLR_n),
+    .Ei_n(control_signals[8]),
+    .Li_n(control_signals[9]),
+    .bus(data_bus),
+    .opcode(ir_opcode),
+    .address(ir_address),
+    .hlt(halt_signal)
+  );
+  
+  MAR mar(
+    .CLK(clk_out), 
+    .bus(ir_address),
+    .out(address_bus),
+    .Lm_n(control_signals[10])
+  );
+  
+  Bus bus(
+    .PCin(program_counter.address),
+    .Ep(control_signals[1]),
+    .RAMin(ram.data),
+    .CE_n(control_signals[2]),
+    .IRin(ir_address),
+    .Ei_n(control_signals[8]),
+    .ADD_SUBin(alu_result),
+    .Eu(control_signals[7]),
+    .ACCin(accumulator_out),
+    .Ea(control_signals[5]),
+    .bus(data_bus)
+  );
+
+endmodule
