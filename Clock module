@@ -1,0 +1,16 @@
+module Clock (
+ input clk_in,
+  input hlt,
+  output clk
+)
+  
+  always@ (*) begin
+    if(hlt) begin
+      ckl=0;
+    end
+    else begin
+      clk = clk_in;
+    end
+  end
+  
+  endmodule 
