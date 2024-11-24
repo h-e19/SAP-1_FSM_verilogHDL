@@ -5,7 +5,8 @@ module IR (
   input Li_n,
   input [7:0] bus,
   output [3:0] opcode,
-  output [3:0] address
+  output [3:0] address,
+  output hlt
 );
   
   reg [7:0] instruction;
@@ -21,4 +22,12 @@ module IR (
     
     assign address = Ei_n ? 3'bz : ad;
   
+    always@ (*) begin
+      if (opcode == 4'b1111) begin
+        hlt = 1;
+      end else begin
+        hlt = 0;
+      end
+    end
+    
 endmodule
