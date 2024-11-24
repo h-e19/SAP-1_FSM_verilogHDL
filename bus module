@@ -1,0 +1,29 @@
+module Bus (
+  input [3:0] PCin,
+  input Ep,
+  input [7:0] RAMin,
+  input CE_n,
+  input [3:0] IRin,
+  input Ei_n,
+  input [7:0] ADD_SUBin,
+  input Eu,
+  input [7:0] ACCin,
+  input Ea,
+  output reg [7:0] bus
+);
+  always @(*) begin
+    if (Ep) begin 
+      bus = {4'b0, PCin};
+    end else if (!CE_n) begin 
+      bus = RAMin; 
+    end else if (!Ei_n) begin 
+      bus = {4'b0, IRin};
+    end else if (Eu) begin 
+      bus = ADD_SUBin; 
+    end else if (Ea) begin 
+      bus = ACCin[7:0];
+    end else begin
+      bus = 8'bz;
+    end
+  end
+endmodule
