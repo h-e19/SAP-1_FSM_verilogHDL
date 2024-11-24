@@ -1,2 +1,3 @@
-SAP-1 as FSM in verilog HDL
-based on digital electronics by Brown
+design.sv:71: syntax error
+design.sv:64: error: Invalid module instantiation
+Exit code expected: 0, received: 2
